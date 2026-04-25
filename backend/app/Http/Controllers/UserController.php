@@ -4,15 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    // Admin: Create User
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'role' => 'sometimes|in:user,admin',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role ?? 'user',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User created',
+            'data' => $user
+        ], 201);
+    }
+
     // Admin: List Users with Search
     public function index(Request $request)
     {
         $query = User::query();
 
-        // 🔍 Search
         if ($request->search) {
             $query->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('email', 'like', '%' . $request->search . '%');
@@ -33,7 +57,7 @@ class UserController extends Controller
         ]);
     }
 
-    // Admin: Update User (including role & status)
+    // Admin: Update User
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -46,16 +70,10 @@ class UserController extends Controller
             'is_active' => 'sometimes|boolean'
         ]);
 
-        $data = $request->only([
-            'name',
-            'email',
-            'role',
-            'is_active'
-        ]);
+        $data = $request->only(['name', 'email', 'role', 'is_active']);
 
-        // ⚠️ JANGAN HASH kalau pakai mutator di model
         if ($request->password) {
-            $data['password'] = $request->password;
+            $data['password'] = Hash::make($request->password);
         }
 
         $user->update($data);
@@ -67,42 +85,11 @@ class UserController extends Controller
         ]);
     }
 
-    // Admin: Suspend User
-    public function suspend($id)
-    {
-        $user = User::findOrFail($id);
-
-        $user->update([
-            'is_active' => false
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'User suspended'
-        ]);
-    }
-
-    // Admin: Activate User
-    public function activate($id)
-    {
-        $user = User::findOrFail($id);
-
-        $user->update([
-            'is_active' => true
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'User activated'
-        ]);
-    }
-
-    // Admin: Delete User (Except Self)
+    // Admin: Delete User
     public function destroy($id)
     {
         $user = User::findOrFail($id);
 
-        // ❗Jangan biarkan admin hapus dirinya sendiri
         if (auth()->id() == $user->id) {
             return response()->json([
                 'success' => false,
@@ -118,16 +105,27 @@ class UserController extends Controller
         ]);
     }
 
+    // Admin: Suspend User
+    public function suspend($id)
+    {
+        User::findOrFail($id)->update(['is_active' => false]);
+        return response()->json(['success' => true, 'message' => 'User suspended']);
+    }
+
+    // Admin: Activate User
+    public function activate($id)
+    {
+        User::findOrFail($id)->update(['is_active' => true]);
+        return response()->json(['success' => true, 'message' => 'User activated']);
+    }
+
     // User: Get Own Profile
     public function me(Request $request)
     {
-        return response()->json([
-            'success' => true,
-            'data' => $request->user()
-        ]);
+        return response()->json(['success' => true, 'data' => $request->user()]);
     }
 
-    // User: Update Own Profile (name, email)
+    // User: Update Own Profile
     public function updateSelf(Request $request)
     {
         $user = $request->user();
@@ -137,29 +135,18 @@ class UserController extends Controller
             'email' => 'sometimes|email|unique:users,email,' . $user->id
         ]);
 
-        $user->update($request->only([
-            'name',
-            'email'
-        ]));
+        $user->update($request->only(['name', 'email']));
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile updated',
-            'data' => $user
-        ]);
+        return response()->json(['success' => true, 'message' => 'Profile updated', 'data' => $user]);
     }
 
     // User: Delete Own Account
     public function deleteSelf(Request $request)
     {
         $user = $request->user();
-
-        $user->tokens()->delete(); // Revoke token
+        $user->tokens()->delete();
         $user->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Account deleted'
-        ]);
+        return response()->json(['success' => true, 'message' => 'Account deleted']);
     }
 }

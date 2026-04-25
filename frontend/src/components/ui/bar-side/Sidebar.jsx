@@ -5,23 +5,21 @@ import { useAuth } from "../../../contexts/AuthContexts";
 import { useNavigate } from "react-router-dom";
 
 const menu = [
-  { label: "Movies" },
-  { label: "Popular" },
-  { label: "Top Rated" },
-  { label: "Upcoming" },
-  { label: "Genres" },
-  { label: "Watchlist" },
-  { label: "Community Talks" },
-  { label: "Profile" },
-  { label: "Admin Dashboard", adminOnly: true },
+  { label: "Movies", path: "/" },
+  { label: "Popular", path: "/popular" },
+  { label: "Top Rated", path: "/coming-soon" },
+  { label: "Upcoming", path: "/coming-soon" },
+  { label: "Genres", path: "/genre" },
+  { label: "Watchlist", path: "/watchlist" },
+  { label: "Community Talks", path: "/coming-soon" },
+  { label: "Profile", path: "/coming-soon" },
+  { label: "Admin Dashboard", path: "/admin", adminOnly: true },
 ];
 
 function Sidebar() {
   const [activeIndex, setActiveIndex] = useState(0);
-
   const { user, logout } = useAuth();
   const isLoggedIn = !!user;
-
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -29,36 +27,35 @@ function Sidebar() {
     navigate("/login");
   };
 
-  const handleLogin = () => {
-    navigate("/login");
-  };
+  const filteredMenu = menu.filter(
+    (item) => !item.adminOnly || user?.role === "admin"
+  );
 
   return (
     <div className="w-64 bg-[#111] text-white h-full flex flex-col shrink-0">
-
-      {/* LOGO */}
       <h2 className="p-5 m-0">🎬INDOFLIX</h2>
 
-      {/* MENU */}
       <div className="flex-1">
-        {menu.map((item, index) => (
+        {filteredMenu.map((item, index) => (
           <SidebarItem
             key={index}
             item={item}
             active={activeIndex === index}
-            onClick={() => setActiveIndex(index)}
+            onClick={() => {
+              setActiveIndex(index);
+              navigate(item.path); // ← navigasi ke route
+            }}
           />
         ))}
       </div>
 
-      {/* USER SECTION */}
       <UserSection
         isLoggedIn={isLoggedIn}
         name={user?.name || "Guest"}
         email={user?.email || "-"}
         avatarUrl="https://i.pravatar.cc/100"
         onLogout={handleLogout}
-        onLogin={handleLogin}
+        onLogin={() => navigate("/login")}
       />
     </div>
   );

@@ -20,10 +20,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-
-            // NOTE: Password hashing is handled in the User model's mutator (setPasswordAttribute)
-            'password' => $request->password,
-
+            'password' => Hash::make($request->password), // ← fix: hash password
             'role' => 'user'
         ]);
 
@@ -49,7 +46,6 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Invalid
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => false,
@@ -57,7 +53,6 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Block Suspended Accounts
         if (isset($user->is_active) && !$user->is_active) {
             return response()->json([
                 'success' => false,
@@ -65,7 +60,6 @@ class AuthController extends Controller
             ], 403);
         }
 
-        // TOKEN
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

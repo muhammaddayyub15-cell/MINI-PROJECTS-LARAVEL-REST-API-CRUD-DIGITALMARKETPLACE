@@ -6,9 +6,7 @@ function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // =========================
-  // 📝 FORM STATE
-  // =========================
+  // FORM STATE
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -16,16 +14,14 @@ function Login() {
 
   const [error, setError] = useState("");
 
-  // =========================
-  // 🚀 HANDLE LOGIN
-  // =========================
+  // HANDLE LOGIN
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const res = await login(form);
 
     if (res.success) {
-      navigate("/"); // 🔥 redirect ke home
+      navigate("/"); // redirect ke home
     } else {
       setError(res.message || "Login gagal");
     }
@@ -69,7 +65,7 @@ function Login() {
         {/* BUTTON */}
         <button
           type="submit"
-          className="w-full py-2 bg-yellow-500 rounded rounded-md bg-gradient-to-br hover:bg-blue-600"
+          className="w-full py-2 bg-yellow-500 rounded-md bg-gradient-to-br hover:bg-blue-600"
         >
           Login
         </button>

@@ -7,7 +7,7 @@ function MainLayout() {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex min-h-screen w-full bg-gradient-to-br from-[#0369f8] via-[#0d0c0c] to-[#f4c50d]">
+    <div className="flex min-h-screen w-full bg-linear-to-br from-[#0369f8] via-[#0d0c0c] to-[#f4c50d]">
       
       {/* SIDEBAR */}
       <div className="w-64 shrink-0">

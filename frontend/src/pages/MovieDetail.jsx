@@ -25,10 +25,10 @@ function MovieDetail() {
         <img
           src={movie.posterUrl || movie.poster_url}
           alt={movie.title}
-          className="object-cover w-full h-[350px] rounded-xl"
+          className="object-cover w-full h-87.5 rounded-xl"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent rounded-xl" />
+        <div className="absolute inset-0 bg-linear-to-t from-black to-transparent rounded-xl" />
 
         <div className="absolute bottom-4 left-4">
           <h1 className="text-3xl font-bold">{movie.title}</h1>

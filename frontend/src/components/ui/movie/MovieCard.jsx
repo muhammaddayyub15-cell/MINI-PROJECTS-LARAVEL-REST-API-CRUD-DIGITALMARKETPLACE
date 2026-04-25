@@ -45,7 +45,7 @@ function MovieCard({ id, title, poster_url, rating, categories }) {
                 e.stopPropagation();
                 navigate(`/movies/${id}`);
               }}
-              className="w-full px-3 py-2 mt-3 font-semibold text-white transition rounded-lg bg-gradient-to-br from-red-600 to-red-500 hover:scale-105"
+              className="w-full px-3 py-2 mt-3 font-semibold text-white transition rounded-lg bg-linear-to-br from-red-600 to-red-500 hover:scale-105"
             >
               ▶ Watch
             </button>
