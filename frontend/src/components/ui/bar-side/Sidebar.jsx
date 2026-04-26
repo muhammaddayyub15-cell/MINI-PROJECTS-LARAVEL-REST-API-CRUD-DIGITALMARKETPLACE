@@ -5,18 +5,18 @@ import { useAuth } from "../../../contexts/AuthContexts";
 import { useNavigate } from "react-router-dom";
 
 const menu = [
-  { label: "Movies", path: "/" },
-  { label: "Popular", path: "/popular" },
-  { label: "Top Rated", path: "/coming-soon" },
-  { label: "Upcoming", path: "/coming-soon" },
+  { label: "Movies",path: "/" },
+  { label: "Popular",path: "/popular" },
+  { label: "Top Rated",path: "/coming-soon" },
+  { label: "Upcoming",path: "/coming-soon" },
   { label: "Genres", path: "/genre" },
   { label: "Watchlist", path: "/watchlist" },
-  { label: "Community Talks", path: "/coming-soon" },
+  { label: "Community Talks", ath: "/coming-soon" },
   { label: "Profile", path: "/coming-soon" },
   { label: "Admin Dashboard", path: "/admin", adminOnly: true },
 ];
 
-function Sidebar() {
+function Sidebar({ onClose }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const { user, logout } = useAuth();
   const isLoggedIn = !!user;
@@ -33,9 +33,21 @@ function Sidebar() {
 
   return (
     <div className="w-64 bg-[#111] text-white h-full flex flex-col shrink-0">
-      <h2 className="p-5 m-0">🎬INDOFLIX</h2>
 
-      <div className="flex-1">
+      {/* Header + tombol close (hanya mobile) */}
+      <div className="flex items-center justify-between p-5">
+        <h2 className="m-0 text-lg font-bold">🎬INDOFLIX</h2>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="flex items-center justify-center transition-all rounded-full lg:hidden w-7 h-7 text-white/60 hover:text-white bg-white/10 hover:bg-white/20"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
         {filteredMenu.map((item, index) => (
           <SidebarItem
             key={index}
@@ -43,7 +55,8 @@ function Sidebar() {
             active={activeIndex === index}
             onClick={() => {
               setActiveIndex(index);
-              navigate(item.path); // ← navigasi ke route
+              navigate(item.path);
+              onClose?.(); // tutup drawer saat navigasi di mobile
             }}
           />
         ))}
