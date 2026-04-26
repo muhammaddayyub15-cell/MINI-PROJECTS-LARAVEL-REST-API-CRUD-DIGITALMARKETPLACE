@@ -42,7 +42,7 @@ function Watchlist() {
       ) : apiWatchlist.length === 0 ? (
         <div className="py-16 text-center text-white/30">
           <p className="mb-3 text-4xl">☆</p>
-          <p>Belum ada movie di watchlist</p>
+          <p>You haven't added any movies to your watchlist yet.</p>
         </div>
       ) : (
         <div className="grid gap-3">

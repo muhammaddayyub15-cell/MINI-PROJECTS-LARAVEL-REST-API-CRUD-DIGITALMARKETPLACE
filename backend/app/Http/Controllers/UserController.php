@@ -49,13 +49,18 @@ class UserController extends Controller
     }
 
     // Admin: Show User Detail
-    public function show($id)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => User::findOrFail($id)
-        ]);
-    }
+        public function show($id)
+{
+        $user = User::with([
+            'watchlist.movie',
+            'reactions.movie'
+         ])->findOrFail($id);
+
+         return response()->json([
+          'success' => true,
+           'data' => $user
+            ]);
+}
 
     // Admin: Update User
     public function update(Request $request, $id)
