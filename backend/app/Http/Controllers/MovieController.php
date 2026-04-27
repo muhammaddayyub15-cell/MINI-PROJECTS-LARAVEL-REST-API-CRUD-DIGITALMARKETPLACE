@@ -36,7 +36,7 @@ class MovieController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $query->paginate(10)
+            'data' => $query->paginate(24) // pagination 24 per page (control to FE)
         ]);
     }
 

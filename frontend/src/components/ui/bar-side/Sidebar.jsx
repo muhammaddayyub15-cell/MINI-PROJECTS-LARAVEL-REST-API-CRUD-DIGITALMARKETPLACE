@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const menu = [
   { label: "Movies",path: "/" },
   { label: "Popular",path: "/popular" },
-  { label: "Top Rated",path: "/coming-soon" },
+  { label: "User Choices",path: "/coming-soon" },
   { label: "Upcoming",path: "/coming-soon" },
   { label: "Genres", path: "/genre" },
   { label: "Watchlist", path: "/watchlist" },

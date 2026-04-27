@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
@@ -19,6 +18,7 @@ class User extends Authenticatable
         'password',
         'role',
         'is_active',
+        'avatar', 
     ];
 
     protected $hidden = [
@@ -26,13 +26,13 @@ class User extends Authenticatable
         'remember_token'
     ];
 
-    // ✅ RELATION: WATCHLIST
+    // RELATION: WATCHLIST
     public function watchlist()
     {
         return $this->hasMany(Watchlist::class);
     }
 
-    // ✅ RELATION: REACTIONS
+    // RELATION: REACTIONS
     public function reactions()
     {
         return $this->hasMany(Reaction::class);

@@ -6,7 +6,7 @@ function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-    // FORM STATE
+    // Form State
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -15,7 +15,7 @@ function Register() {
 
   const [error, setError] = useState("");
 
-    // HANDLE REGISTER
+    // Handle Register
   const handleSubmit = async (e) => {
     e.preventDefault();
 
