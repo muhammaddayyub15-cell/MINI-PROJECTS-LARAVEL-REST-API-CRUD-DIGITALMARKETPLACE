@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
 import ProtectedRoute from "./route/ProtectedRoute";
+import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -18,14 +19,16 @@ function App() {
   return (
     <Routes>
 
+      // Route Publik
+      <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
       <Route element={<MainLayout />}>
 
-        {/* semua user yang sudah login */}
+        // Semua User Yang Sudah Login
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/popular" element={<Popular />} />
           <Route path="/genre" element={<Genre />} />
           <Route path="/watchlist" element={<Watchlist />} />
@@ -33,7 +36,7 @@ function App() {
           <Route path="/coming-soon" element={<ComingSoon />} />
         </Route>
 
-        {/* admin only */}
+        // Admin Only
         <Route element={<ProtectedRoute role="admin" />}>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/users/:id" element={<UserDetail />} />

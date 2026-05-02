@@ -17,9 +17,10 @@ class MovieController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        // Filter By Category (JSON)
-        if ($request->category) {
-            $query->whereJsonContains('categories', $request->category);
+        // Filter By Category/Genre (JSON) - support both parameter
+        $filterGenre = $request->genre ?? $request->category;
+        if ($filterGenre && $filterGenre !== 'All') {
+            $query->whereJsonContains('categories', $filterGenre);
         }
 
         // Popular Movies
@@ -36,7 +37,7 @@ class MovieController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $query->paginate(24) // pagination 24 per page (control to FE)
+            'data' => $query->paginate($request->per_page ?? 24)
         ]);
     }
 
@@ -121,7 +122,7 @@ class MovieController extends Controller
             $data['poster_url'] = asset('storage/' . $path);
         }
 
-        // ensure JSON format
+        // Ensure JSON format
         if (isset($data['categories']) && is_array($data['categories'])) {
             $data['categories'] = json_encode($data['categories']);
         }

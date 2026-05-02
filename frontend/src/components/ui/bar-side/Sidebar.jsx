@@ -5,13 +5,13 @@ import { useAuth } from "../../../contexts/AuthContexts";
 import { useNavigate } from "react-router-dom";
 
 const menu = [
-  { label: "Movies",path: "/" },
+  { label: "Movies", path: "/home" },
   { label: "Popular",path: "/popular" },
   { label: "User Choices",path: "/coming-soon" },
   { label: "Upcoming",path: "/coming-soon" },
   { label: "Genres", path: "/genre" },
   { label: "Watchlist", path: "/watchlist" },
-  { label: "Community Talks", ath: "/coming-soon" },
+  { label: "Community Talks", path: "/coming-soon" },
   { label: "Profile", path: "/coming-soon" },
   { label: "Admin Dashboard", path: "/admin", adminOnly: true },
 ];

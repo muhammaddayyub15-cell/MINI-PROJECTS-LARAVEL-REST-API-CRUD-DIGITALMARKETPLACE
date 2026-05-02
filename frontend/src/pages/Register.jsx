@@ -6,87 +6,113 @@ function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-    // Form State
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    // Handle Register
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const res = await register(form);
-
+    setLoading(false);
     if (res.success) {
-      navigate("/login"); // redirect ke login
+      navigate("/login");
     } else {
       setError(res.message || "Register gagal");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen text-white">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm p-6 border bg-white/5 backdrop-blur-xl border-white/10 rounded-xl"
-      >
-        <h2 className="mb-4 text-xl font-bold">Register</h2>
+    <div className="min-h-screen bg-linear-to-br from-[#0369f8] via-[#0d0c0c] to-[#f4c50d] text-white flex items-center justify-center px-4 relative overflow-hidden">
 
-        {/* ERROR */}
-        {error && (
-          <p className="mb-3 text-sm text-red-400">
-            {error}
-          </p>
-        )}
+      {/* BG glow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-15"
+          style={{ background: "radial-gradient(circle, #f59e0b 0%, transparent 70%)" }} />
+      </div>
 
-        {/* NAME */}
-        <input
-          placeholder="Name"
-          className="w-full p-2 mb-3 rounded bg-white/10"
-          onChange={(e) =>
-            setForm({ ...form, name: e.target.value })
-          }
-        />
+      <div className="relative z-10 w-full max-w-sm">
 
-        {/* EMAIL */}
-        <input
-          placeholder="Email"
-          className="w-full p-2 mb-3 rounded bg-white/10"
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
-        />
-
-        {/* PASSWORD */}
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 mb-4 rounded bg-white/10"
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
-        />
-
-        {/* BUTTON */}
-        <button
-          type="submit"
-          className="w-full py-2 bg-yellow-500 rounded-md bg-linear-to-br hover:bg-blue-600"
-        >
-          Register
-        </button>
-
-        {/* LINK LOGIN */}
-        <p className="mt-3 text-sm text-center">
-          Sudah punya akun?{" "}
-          <Link to="/login" className="text-yellow-400">
-            Login
+        {/* Logo */}
+        <div className="mb-8 text-center">
+          <Link to="/" className="inline-flex items-center gap-2 mb-4">
+            <span className="text-2xl">🎬</span>
+            <span className="text-2xl font-black tracking-tight">
+              INDO<span className="text-yellow-400">FLIX</span>
+            </span>
           </Link>
-        </p>
-      </form>
+          <h2 className="text-xl font-bold">Create New Account</h2>
+          <p className="mt-1 text-sm text-white/40">Free Registration</p>
+        </div>
+
+        {/* Card */}
+        <div className="p-6 border rounded-2xl border-white/10 bg-white/5 backdrop-blur-xl">
+
+          {/* Error */}
+          {error && (
+            <div className="px-4 py-3 mb-4 text-sm text-red-400 border rounded-xl bg-red-500/10 border-red-500/30">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-3">
+
+            {/* Name */}
+            <div>
+              <label className="text-xs text-white/40 font-semibold uppercase tracking-wider block mb-1.5">Name</label>
+              <input
+                placeholder="Full Name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full px-4 py-3 text-sm text-white transition-all border rounded-xl bg-white/8 border-white/10 placeholder-white/25 focus:outline-none focus:border-yellow-500/50 focus:bg-white/10"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="text-xs text-white/40 font-semibold uppercase tracking-wider block mb-1.5">Email</label>
+              <input
+                type="email"
+                placeholder="yourmail.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full px-4 py-3 text-sm text-white transition-all border rounded-xl bg-white/8 border-white/10 placeholder-white/25 focus:outline-none focus:border-yellow-500/50 focus:bg-white/10"
+              />
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="text-xs text-white/40 font-semibold uppercase tracking-wider block mb-1.5">Password</label>
+              <input
+                type="password"
+                placeholder="Min. 8 Characters"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                className="w-full px-4 py-3 text-sm text-white transition-all border rounded-xl bg-white/8 border-white/10 placeholder-white/25 focus:outline-none focus:border-yellow-500/50 focus:bg-white/10"
+              />
+            </div>
+
+            {/* Submit */}
+            <button
+              type="Submit"
+              disabled={loading}
+              className="w-full py-3 mt-2 font-bold text-white transition-all border rounded-xl bg-white/10 border-white/20 hover:bg-white/20 active:scale-95 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Regsitring..." : "Register Now"}
+            </button>
+
+          </form>
+
+          {/* Link login */}
+          <p className="mt-4 text-sm text-center text-white/40">
+            Already Have Account?{" "}
+            <Link to="/login" className="font-semibold text-yellow-400 transition-colors hover:text-yellow-300">
+              Login Here
+            </Link>
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 }

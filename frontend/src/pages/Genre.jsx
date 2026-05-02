@@ -4,17 +4,21 @@ import MovieList from "../components/ui/movie/MovieList";
 
 function Genre() {
   const [movies, setMovies] = useState([]);
-  const [genres, setGenres] = useState([]);
+  const [genres, setGenres] = useState([
+    "All", "Action", "Adventure", "Animation", "Comedy",
+    "Crime", "Drama", "Fantasy", "History", "Horror",
+    "Music", "Mystery", "Romance", "Sci-Fi", "Thriller",
+    "War", "Western"
+  ]);
 
   const [selected, setSelected] = useState("All");
-
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
   const perPage = 24;
 
-  // FETCH DATA FROM API (WITH GENRE FILTER)
+  // FETCH MOVIES FROM API (WITH GENRE FILTER)
   const fetchMovies = async (currentPage = 1, genre = "All") => {
     setLoading(true);
 
@@ -29,8 +33,8 @@ function Genre() {
       setPage(data.current_page);
       setLastPage(data.last_page);
 
-      // ambil genre list dari API (lebih stabil)
-      if (data.genres) {
+      // update genres dari API jika tersedia
+      if (data.genres && data.genres.length > 0) {
         setGenres(["All", ...data.genres]);
       }
     } catch (err) {
@@ -40,7 +44,7 @@ function Genre() {
     }
   };
 
-  // initial load
+  // INITIAL LOAD
   useEffect(() => {
     fetchMovies(page, selected);
   }, [page, selected]);
@@ -56,7 +60,7 @@ function Genre() {
       {/* HEADER */}
       <h1 className="mb-4 text-2xl font-bold">Genre</h1>
 
-      {/* FILTER */}
+      {/* FILTER TABS */}
       <div className="flex flex-wrap gap-2 mb-6">
         {genres.map((g) => (
           <button
@@ -77,7 +81,13 @@ function Genre() {
       {/* CONTENT */}
       <div className="min-h-[300px]">
         {loading ? (
-          <div className="text-white/40">Loading...</div>
+          <div className="flex items-center justify-center h-40">
+            <div className="text-white/40 animate-pulse">Loading...</div>
+          </div>
+        ) : movies.length === 0 ? (
+          <div className="flex items-center justify-center h-40">
+            <p className="text-white/40">No movies found for <span className="text-yellow-500">"{selected}"</span></p>
+          </div>
         ) : (
           <MovieList movies={movies} />
         )}

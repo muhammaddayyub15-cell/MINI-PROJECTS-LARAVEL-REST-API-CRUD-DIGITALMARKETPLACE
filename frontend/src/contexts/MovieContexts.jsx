@@ -7,7 +7,7 @@ export const MovieProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
   const [watchlistIds, setWatchlistIds] = useState([]);
 
-  // fetch semua movie
+  // Fetch Semua Movie
   useEffect(() => {
     const fetchAll = async () => {
       try {
@@ -20,9 +20,12 @@ export const MovieProvider = ({ children }) => {
     fetchAll();
   }, []);
 
-  // fetch watchlist ids dari API saat load
+  // Fetch Watchlist Ids Hanya Jika Sudah Login
   useEffect(() => {
     const fetchWatchlistIds = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       try {
         const res = await api.get("/watchlist");
         const ids = (res.data.data || []).map((item) => item.movie_id);
