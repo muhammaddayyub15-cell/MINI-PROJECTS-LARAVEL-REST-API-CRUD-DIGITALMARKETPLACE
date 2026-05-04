@@ -19,6 +19,7 @@ function MovieCard({ id, title, poster_url, rating, categories, onBrokenPoster }
   const cardRef     = useRef(null);
   const reactionRef = useRef(null);
   const hoverTimer  = useRef(null);
+  const brokenReported = useRef(false); // prevent duplicate API calls
 
   const inWatchlist = movie ? isInWatchlist(movie.id) : isInWatchlist(id);
   const expanded    = hovered || pinned;
@@ -172,6 +173,13 @@ function MovieCard({ id, title, poster_url, rating, categories, onBrokenPoster }
             onError={(e) => {
               e.target.src = PLACEHOLDER;
               if (onBrokenPoster) onBrokenPoster(id);
+
+              // Report to backend ONCE so next page-load it sorts to last page
+              const token = localStorage.getItem("token");
+              if (token && !brokenReported.current) {
+                brokenReported.current = true;
+                api.post(`/movies/${id}/broken-poster`).catch(() => {});
+              }
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />

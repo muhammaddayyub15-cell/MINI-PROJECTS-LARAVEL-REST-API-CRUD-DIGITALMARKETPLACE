@@ -18,8 +18,8 @@ Route::post('/login',    [AuthController::class, 'login']);
 Route::get('/movies',       [MovieController::class, 'index']);
 Route::get('/movies/{id}',  [MovieController::class, 'show']);
 
-// Protected Routes
-Route::middleware('auth:sanctum')->group(function () {
+    // Protected Routes
+    Route::middleware('auth:sanctum')->group(function () {
 
     // Current User Info
     Route::get('/me',    fn (Request $request) => $request->user());
@@ -36,6 +36,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // User Self-Management
     Route::put('/me',    [UserController::class, 'updateSelf']);
     Route::delete('/me', [UserController::class, 'deleteSelf']);
+
+    // Report broken poster — any logged-in user can trigger this
+    // Backend will clear poster_url so it sorts to last page permanently
+    Route::post('/movies/{id}/broken-poster', [MovieController::class, 'markBrokenPoster']);
 
     // Admin Routes
     Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {

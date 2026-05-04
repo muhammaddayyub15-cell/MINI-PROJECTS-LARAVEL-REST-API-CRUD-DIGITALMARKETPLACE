@@ -168,4 +168,22 @@ class MovieController extends Controller
             'message' => 'Movie deleted'
         ]);
     }
+
+    // Mark Broken Poster — called by frontend when image returns 404
+    // Clears poster_url so backend ORDER BY pushes it to last page
+    public function markBrokenPoster($id)
+    {
+        $movie = Movie::find($id);
+
+        if (!$movie) {
+            return response()->json(['success' => false, 'message' => 'Movie not found'], 404);
+        }
+
+        // Only clear if it's not already empty (avoid unnecessary writes)
+        if (!empty($movie->poster_url)) {
+            $movie->update(['poster_url' => '']);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Poster marked as broken']);
+    }
 }
