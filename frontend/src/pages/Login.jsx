@@ -63,7 +63,7 @@ function Login() {
               <label className="text-xs text-white/40 font-semibold uppercase tracking-wider block mb-1.5">Email</label>
               <input
                 type="email"
-                placeholder="email@kamu.com"
+                placeholder="yourmail@domain.com"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full px-4 py-3 text-sm text-white transition-all border rounded-xl bg-white/8 border-white/10 placeholder-white/25 focus:outline-none focus:border-yellow-500/50 focus:bg-white/10"
@@ -75,7 +75,7 @@ function Login() {
               <label className="text-xs text-white/40 font-semibold uppercase tracking-wider block mb-1.5">Password</label>
               <input
                 type="password"
-                placeholder="Password kamu"
+                placeholder="Your Password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full px-4 py-3 text-sm text-white transition-all border rounded-xl bg-white/8 border-white/10 placeholder-white/25 focus:outline-none focus:border-yellow-500/50 focus:bg-white/10"
